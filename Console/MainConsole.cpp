@@ -1,4 +1,5 @@
 #include "MainConsole.h"
+#include "../Layout/DummyProcessLayout.h"
 
 
 
@@ -82,6 +83,9 @@ void MainConsole::process()
 						std::cerr << "Error: Invalid screen command.\n";
 					}
 				}
+				else if (commandMain == "dummy-layout") {
+					this->executeDummyLayoutCommand();
+				}
 				else {
 					this->commandRecognized(commandMain);
 				}
@@ -121,7 +125,6 @@ void MainConsole::displayDevelopers() const
 
 	std::cout << "Developers: \n";
 	std::cout << "1. Abenoja, Amelia Joyce L. \n";
-	std::cout << "2. Cuales, Bianca Mari A. \n";
 	std::cout << "\n";
 	std::cout << "Last Updated: 15-11-2024\n";
 }
@@ -151,7 +154,8 @@ bool MainConsole::validateCommand(String command) const
 
 	String commandList[] = { "initialize", "exit", "clear",
 							"scheduler-test", "scheduler-stop", "report-util",
-							"screen" };
+							"screen",
+							"dummy-layout" };
 
 	String inputCommand = command.substr(0, command.find(" "));
 	std::transform(inputCommand.begin(), inputCommand.end(), inputCommand.begin(), ::tolower);
@@ -221,6 +225,29 @@ void MainConsole::executeScreenRedrawCommand(String command) const
 	ConsoleManager::getInstance()->switchToScreen(screenName);
 	ConsoleManager::getInstance()->process();
 	ConsoleManager::getInstance()->drawConsole();
+}
+
+void MainConsole::executeDummyLayoutCommand() const
+{
+	DummyProcessLayout dummyLayout;
+
+	dummyLayout.displayCurrentDateTimes();
+	dummyLayout.displayGPUSummaries();
+	
+	// Create a dummy process list for displayProcessList()
+	std::vector<GPUProcess> processes = {
+		{0, "N/A", "N/A", 1368, "C+G", "C:\\Windows\\System32\\dwm.exe", "N/A"},
+		{0, "N/A", "N/A", 2116, "C+G", "...wekyb3d8bbwe\\XboxGameBarWidgets.exe", "N/A"},
+		{0, "N/A", "N/A", 4224, "C+G", "...on\\123.0.2420.65\\msedgewebview2.exe", "N/A"},
+		{0, "N/A", "N/A", 5684, "C+G", "C:\\Windows\\explorer.exe", "N/A"},
+		{0, "N/A", "N/A", 6676, "C+G", "...nt.CBS_cw5n1h2txyewy\\SearchHost.exe", "N/A"},
+		{0, "N/A", "N/A", 6700, "C+G", "...2txyewy\\StartMenuExperienceHost.exe", "N/A"}
+	};
+
+	// Call displayProcessList() with the dummy data
+	dummyLayout.displayProcessList(processes);
+
+	std::cout << std::endl;
 }
 
 std::shared_ptr<Process> MainConsole::createProcess(String processName) const

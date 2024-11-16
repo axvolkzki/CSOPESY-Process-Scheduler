@@ -154,6 +154,7 @@ ConsoleManager::ConsoleManager()
 	const std::shared_ptr<SchedulingConsole> schedulingConsole = std::make_shared<SchedulingConsole>();
 	const std::shared_ptr<MemorySimulationConsole> memoryConsole = std::make_shared<MemorySimulationConsole>();*/
 
+
 	this->consoleTable[MAIN_CONSOLE_NAME] = mainConsole;
 	/*this->consoleTable[MARQUEE_CONSOLE_NAME] = marqueeConsole;
 	this->consoleTable[SCHEDULING_CONSOLE_NAME] = schedulingConsole;

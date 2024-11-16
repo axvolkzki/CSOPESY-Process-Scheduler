@@ -37,6 +37,8 @@ private:
 	void executeSchedulerStopCommand() const;
 	void executeReportUtilizationCommand() const;
 
+	void executeDummyLayoutCommand() const;
+
 	std::shared_ptr<Process> createProcess(String processName) const;
 
 };
