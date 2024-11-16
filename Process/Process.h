@@ -1,20 +1,35 @@
 #pragma once
+#include "../TypedefRepo.h"
+#include "../Command/PrintCommand.h"
+
 #include <memory>
 #include <vector>
-#include <iostream>
-#include <chrono>
-#include <iomanip>
-#include <ctime>
 
-#include "../TypedefRepo.h"
+
 
 class Process
 {
 public:
-    Process(String name, int totalLines);
+    enum ProcessState {
+        READY,
+        RUNNING,
+        WAITING,
+        FINISHED
+    };
 
+    Process(int pid, String name);
+
+    void addCommand(ICommand::CommandType commandType);
+    void executeCurrentCommand() const;
+    void moveToNextLine();
+
+    bool isFinished() const;
+    int getRemainingTime() const;
     int getCommandCounter() const;
     int getLinesOfCode() const;
+    int getPID() const;
+    int getCPUCoreID() const;
+    ProcessState getState() const;
     String getName() const;
 
     std::tm getArrivalTime() const;
@@ -23,11 +38,17 @@ public:
     void generateArrivalTime();
 
 private:
-    void updateArrivalTime(); // Encapsulate logic for setting the arrival time
-
     int pid;
     String name;
     int commandCounter = 0;
     std::tm localArrivalTime; // Store the Arrival Time
-    int totalLines;
+
+    typedef std::vector<std::shared_ptr<ICommand>> CommandList;
+    CommandList commandList;
+    int cpuCoreID = -1;
+    ProcessState currentState;
+
+    friend class ResourceEmulator;
 };
+
+

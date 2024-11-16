@@ -1,46 +1,92 @@
 #include "Process.h"
+#include "Process.h"
 
-Process::Process(String name, int totalLines)
-    : name(name), totalLines(totalLines)
+
+Process::Process(int pid, String name)
 {
-    updateArrivalTime();
+	this->pid = pid;
+	this->name = name;
+	
+	this->generateArrivalTime();
+
+	this->commandCounter = 0;
+	this->currentState = ProcessState::READY;
+}
+
+void Process::addCommand(ICommand::CommandType commandType)
+{
+	if (commandType == ICommand::PRINT) {
+		String toPrint = "Hello, World! From Process " + std::to_string(this->pid); // Debug output
+		const std::shared_ptr<ICommand> print = std::make_shared<PrintCommand>(this->pid, toPrint);
+		this->commandList.push_back(print);
+	}
+}
+
+void Process::executeCurrentCommand() const
+{
+	this->commandList[this->commandCounter]->execute();
+}
+
+void Process::moveToNextLine()
+{
+	this->commandCounter++;
+}
+
+bool Process::isFinished() const
+{
+	return this->commandCounter == this->commandList.size();
+}
+
+int Process::getRemainingTime() const
+{
+	return this->commandCounter == this->commandList.size();
 }
 
 int Process::getCommandCounter() const
 {
-    return commandCounter;
+	return this->commandList.size() - this->commandCounter;
 }
 
 int Process::getLinesOfCode() const
 {
-    return totalLines;
+	return this->commandList.size()
+}
+
+int Process::getPID() const
+{
+	return this->pid;
+}
+
+int Process::getCPUCoreID() const
+{
+	return this->cpuCoreID;
+}
+
+Process::ProcessState Process::getState() const
+{
+	return this->currentState;
 }
 
 String Process::getName() const
 {
-    return name;
+	return this->name;
 }
 
 std::tm Process::getArrivalTime() const
 {
-    return localArrivalTime;
+	return this->localArrivalTime;
 }
 
 String Process::getFormattedArrivalTime() const
 {
-    char buffer[64]; // Buffer for formatted time
-    std::strftime(buffer, sizeof(buffer), "%m/%d/%Y, %I:%M:%S %p", &localArrivalTime);
-    return String(buffer);
+	char buffer[64]; // Buffer for formatted time
+	std::strftime(buffer, sizeof(buffer), "%m/%d/%Y, %I:%M:%S %p", &localArrivalTime);
+	return String(buffer);
 }
 
 void Process::generateArrivalTime()
 {
-    updateArrivalTime();
-}
-
-void Process::updateArrivalTime()
-{
-    auto now = std::chrono::system_clock::now();
-    auto currentTime = std::chrono::system_clock::to_time_t(now);
-    localtime_s(&localArrivalTime, &currentTime); // Store the arrival time
+	auto now = std::chrono::system_clock::now();
+	auto currentTime = std::chrono::system_clock::to_time_t(now);
+	localtime_s(&localArrivalTime, &currentTime); // Store the arrival time
 }
