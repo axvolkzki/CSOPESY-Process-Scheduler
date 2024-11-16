@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console\MainConsole.cpp" />
+    <ClCompile Include="Event\KeyboardEventHandler.cpp" />
     <ClCompile Include="Process\Process.cpp" />
     <ClCompile Include="Screen\BaseScreen.cpp" />
     <ClCompile Include="Console\ConsoleManager.cpp" />
@@ -137,6 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\MainConsole.h" />
+    <ClInclude Include="Event\IKeyboardEvent.h" />
+    <ClInclude Include="Event\KeyboardEventHandler.h" />
     <ClInclude Include="Process\Process.h" />
     <ClInclude Include="Screen\BaseScreen.h" />
     <ClInclude Include="Console\ConsoleManager.h" />

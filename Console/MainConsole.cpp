@@ -19,14 +19,14 @@ void MainConsole::process()
 {
 	String commandMain;
 	bool isValidCommand = false;
-	this->isInitialized = false;
+	isRunning = true;
 
 	while (isRunning) {
 		std::cout << "Enter a command: ";
 		std::getline(std::cin, commandMain);
 
 		// Check if it is a valid initialize command
-		if (this->isInitialized == false && this->isInitialCommand(commandMain)) {
+		if (!this->isInitialized && this->isInitialCommand(commandMain) && this->isRunning) {
 
 			if (commandMain == "initialize") {
 				this->isInitialized = true;
@@ -36,18 +36,23 @@ void MainConsole::process()
 				continue;	// Skip the rest of the loop
 			}
 			else if (commandMain == "exit") {
-				this->isRunning = false;
 				std::cout << "Exiting the program..." << std::endl;
+				isRunning = false;
+				ConsoleManager::getInstance()->exitApplication();
 			}
 		}
 
+		
 		isValidCommand = this->validateCommand(commandMain);
 		// Check if the program is initialized before proceeding
 		if (this->isInitialized && isValidCommand) {
 			
 
 			if (isValidCommand) {
-				if (commandMain == "clear") {
+				if (commandMain == "initialize") {
+					std::cout << "The program is already initialized!" << std::endl;
+				}
+				else if (commandMain == "clear") {
 					system("cls");
 					this->onEnabled();
 					continue;	// Skip the rest of the loop
@@ -55,6 +60,27 @@ void MainConsole::process()
 				else if (commandMain == "exit") {
 					this->isRunning = false;
 					std::cout << "Exiting the program..." << std::endl;
+					ConsoleManager::getInstance()->exitApplication();
+					isRunning = false;
+				}
+				else if (commandMain.substr(0, 6) == "screen") {
+					if (this->validateScreenCommand(commandMain)) {
+						
+						if (commandMain.substr(0, 9) == "screen -s") {
+							isRunning = false;
+							this->executeScreenSwitchCommand(commandMain);
+						}
+						else if (commandMain.substr(0, 9) == "screen -r") {
+							isRunning = false;
+							this->executeScreenRedrawCommand(commandMain);
+						}
+						else if (commandMain.substr(0, 9) == "screen -l") {
+							//this->executeScreenListCommand();
+						}
+					}
+					else {
+						std::cerr << "Error: Invalid screen command.\n";
+					}
 				}
 				else {
 					this->commandRecognized(commandMain);
@@ -64,12 +90,9 @@ void MainConsole::process()
 		else {
 			std::cerr << "Error: Application is not initialized. Please initialize the application first.\n" << std::endl;
 		}
+		
 	}
 
-	// Exit the program
-	if (!this->isRunning) {
-		ConsoleManager::getInstance()->exitApplication();
-	}
 }
 
 void MainConsole::ASCIITextHeader() const
@@ -146,4 +169,68 @@ bool MainConsole::validateCommand(String command) const
 void MainConsole::commandRecognized(String command) const
 {
 	std::cout << command << " command recognized. Doing something...\n" << std::endl;
+}
+
+bool MainConsole::validateScreenCommand(String command) const
+{
+	bool isValid = false;
+
+	String subString = command.substr(0, 9);
+
+	if (subString == "screen -s" && command.length() > 9) {
+		isValid = true;
+	}
+	else if (subString == "screen -r" && command.length() > 9) {
+		isValid = true;
+	}
+	else if (subString == "screen -l" && command.length() == 9) {
+		isValid = true;
+	}
+
+	if (subString == "screen -s" && command.length() == 9) {
+		std::cerr << "Error: No screen name provided.\n";
+	}
+	else if (subString == "screen -r" && command.length() == 9) {
+		std::cerr << "Error: No screen name provided.\n";
+	}
+
+	return isValid;
+}
+
+void MainConsole::executeScreenSwitchCommand(String command) const
+{
+	String screenName = command.substr(10, command.length());
+
+	std::shared_ptr<Process> newProcess = this->createProcess(screenName);
+	std::shared_ptr<BaseScreen> newScreen = std::make_shared<BaseScreen>(newProcess, screenName);
+
+	ConsoleManager::getInstance()->registerScreen(newScreen);
+	ConsoleManager::getInstance()->switchToScreen(screenName);
+	ConsoleManager::getInstance()->process();
+	ConsoleManager::getInstance()->drawConsole();
+}
+
+void MainConsole::executeScreenRedrawCommand(String command) const
+{
+	String screenName = command.substr(10, command.length());
+
+	// get the process first
+	std::shared_ptr<Process> currentProcess = ConsoleManager::getInstance()->getProcess(screenName);
+	std::shared_ptr<BaseScreen> currentScreen = std::make_shared<BaseScreen>(currentProcess, screenName);
+	ConsoleManager::getInstance()->registerScreen(currentScreen);
+	ConsoleManager::getInstance()->switchToScreen(screenName);
+	ConsoleManager::getInstance()->process();
+	ConsoleManager::getInstance()->drawConsole();
+}
+
+std::shared_ptr<Process> MainConsole::createProcess(String processName) const
+{
+	// Create a process
+	std::shared_ptr<Process> process = std::make_shared<Process>(processName, 100);
+
+	// Add the process in the list
+	ConsoleManager::getInstance()->addProcess(process);
+
+	return process;
+	
 }

@@ -1,6 +1,6 @@
 #include "ConsoleManager.h"
 
-#include <iostream>
+
 
 #include "MainConsole.h"
 //#include "MarqueeConsole.h"
@@ -61,15 +61,15 @@ void ConsoleManager::switchConsole(String consoleName)
 	}
 }
 
-//void ConsoleManager::registerScreen(std::shared_ptr<BaseScreen> screenRef)
-//{
-//	if (this->consoleTable.contains(screenRef->getName())) {
-//		std::cerr << "Screen name " << screenRef->getName() << " is already registered. Please use a different name" << std::endl;
-//		return;
-//	}
-//
-//	this->consoleTable[screenRef->getName()] = screenRef;
-//}
+void ConsoleManager::registerScreen(std::shared_ptr<BaseScreen> screenRef)
+{
+	if (this->consoleTable.contains(screenRef->getName())) {
+		std::cerr << "Screen name " << screenRef->getName() << " is already registered. Please use a different name" << std::endl;
+		return;
+	}
+
+	this->consoleTable[screenRef->getName()] = screenRef;
+}
 
 void ConsoleManager::switchToScreen(String screenName)
 {
@@ -124,6 +124,21 @@ HANDLE ConsoleManager::getConsoleHandle() const
 
 void ConsoleManager::setCursorPosition(int x, int y) const
 {
+}
+
+void ConsoleManager::addProcess(std::shared_ptr<Process> processName)
+{
+	processList.push_back(processName);
+}
+
+std::shared_ptr<Process> ConsoleManager::getProcess(String processName)
+{
+	for (const auto& process : processList) {
+		if (process->getName() == processName) {
+			return process;
+		}
+	}
+	return nullptr;
 }
 
 // Constructor

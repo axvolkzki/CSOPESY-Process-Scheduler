@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <iostream>
 #include "Windows.h"
 
 #include "../TypeDefRepo.h"
@@ -26,7 +27,7 @@ public:
 	void process() const;
 	void switchConsole(String consoleName);
 
-	//void registerScreen(std::shared_ptr<BaseScreen> screenRef);
+	void registerScreen(std::shared_ptr<BaseScreen> screenRef);
 	void switchToScreen(String screenName);
 	void unregisteredScreen(String screenName);
 
@@ -37,6 +38,10 @@ public:
 	HANDLE getConsoleHandle() const;
 
 	void setCursorPosition(int x, int y) const;
+
+	// Add a process to the list
+	void addProcess(std::shared_ptr<Process> processName);
+	std::shared_ptr<Process> getProcess(String processName);
 
 private:
 	ConsoleManager();
@@ -51,5 +56,7 @@ private:
 	
 	HANDLE consoleHandle;
 	bool running = true;
+
+	std::vector<std::shared_ptr<Process>> processList;
 };
 
