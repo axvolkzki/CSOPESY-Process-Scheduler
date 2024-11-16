@@ -25,5 +25,5 @@ inline ICommand::CommandType ICommand::getCommandType()
 
 inline void ICommand::execute()
 {
-	std::cout << "Hello world from screen_" << this->pid << "!";
+	std::cout << "Hello world from Process " << this->pid << "!";
 }
