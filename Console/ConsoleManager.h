@@ -1,13 +1,15 @@
 #pragma once
+#include "../TypeDefRepo.h"
+#include "../Console/AConsole.h"
+#include "../Screen/BaseScreen.h"
+
 #include <memory>
 #include <vector>
 #include <unordered_map>
 #include <iostream>
 #include "Windows.h"
 
-#include "../TypeDefRepo.h"
-#include "../Console/AConsole.h"
-#include "../Screen/BaseScreen.h"
+
 
 const String MAIN_CONSOLE_NAME = "MAIN_CONSOLE";
 const String MARQUEE_CONSOLE_NAME = "MARQUEE_CONSOLE";

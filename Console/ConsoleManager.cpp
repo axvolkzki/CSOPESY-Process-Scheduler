@@ -3,7 +3,7 @@
 
 
 #include "MainConsole.h"
-//#include "MarqueeConsole.h"
+#include "MarqueeConsole.h"
 //#include "SchedulingConsole.h"
 //#include "MemorySimulationConsole.h"
 
@@ -122,8 +122,12 @@ HANDLE ConsoleManager::getConsoleHandle() const
 	return this->consoleHandle;
 }
 
-void ConsoleManager::setCursorPosition(int x, int y) const
+void ConsoleManager::setCursorPosition(int posX, int posY) const
 {
+	COORD coord;
+	coord.X = posX;
+	coord.Y = posY;
+	SetConsoleCursorPosition(this->consoleHandle, coord);
 }
 
 void ConsoleManager::addProcess(std::shared_ptr<Process> processName)
@@ -150,14 +154,14 @@ ConsoleManager::ConsoleManager()
 	this->consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	const std::shared_ptr<MainConsole> mainConsole = std::make_shared<MainConsole>();
-	/*const std::shared_ptr<MarqueeConsole> marqueeConsole = std::make_shared<MarqueeConsole>();
-	const std::shared_ptr<SchedulingConsole> schedulingConsole = std::make_shared<SchedulingConsole>();
+	const std::shared_ptr<MarqueeConsole> marqueeConsole = std::make_shared<MarqueeConsole>();
+	/*const std::shared_ptr<SchedulingConsole> schedulingConsole = std::make_shared<SchedulingConsole>();
 	const std::shared_ptr<MemorySimulationConsole> memoryConsole = std::make_shared<MemorySimulationConsole>();*/
 
 
 	this->consoleTable[MAIN_CONSOLE_NAME] = mainConsole;
-	/*this->consoleTable[MARQUEE_CONSOLE_NAME] = marqueeConsole;
-	this->consoleTable[SCHEDULING_CONSOLE_NAME] = schedulingConsole;
+	this->consoleTable[MARQUEE_CONSOLE_NAME] = marqueeConsole;
+	/*this->consoleTable[SCHEDULING_CONSOLE_NAME] = schedulingConsole;
 	this->consoleTable[MEMORY_CONSOLE_NAME] = memoryConsole;*/
 
 	this->switchConsole(MAIN_CONSOLE_NAME);

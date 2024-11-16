@@ -86,6 +86,9 @@ void MainConsole::process()
 				else if (commandMain == "dummy-layout") {
 					this->executeDummyLayoutCommand();
 				}
+				else if (commandMain == "marquee-console") {
+					this->executeMarqueeConsoleCommand();
+				}
 				else {
 					this->commandRecognized(commandMain);
 				}
@@ -155,7 +158,7 @@ bool MainConsole::validateCommand(String command) const
 	String commandList[] = { "initialize", "exit", "clear",
 							"scheduler-test", "scheduler-stop", "report-util",
 							"screen",
-							"dummy-layout" };
+							"dummy-layout", "marquee-console", "marquee-console" };
 
 	String inputCommand = command.substr(0, command.find(" "));
 	std::transform(inputCommand.begin(), inputCommand.end(), inputCommand.begin(), ::tolower);
@@ -248,6 +251,14 @@ void MainConsole::executeDummyLayoutCommand() const
 	dummyLayout.displayProcessList(processes);
 
 	std::cout << std::endl;
+}
+
+void MainConsole::executeMarqueeConsoleCommand() const
+{
+	// Switch to the Marquee Console
+	ConsoleManager::getInstance()->switchConsole(MARQUEE_CONSOLE_NAME);
+	ConsoleManager::getInstance()->process();
+	ConsoleManager::getInstance()->drawConsole();
 }
 
 std::shared_ptr<Process> MainConsole::createProcess(String processName) const

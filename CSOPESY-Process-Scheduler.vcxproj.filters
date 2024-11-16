@@ -42,6 +42,9 @@
     <ClCompile Include="Layout\DummyProcessLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Console\MarqueeConsole.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console\AConsole.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Layout\DummyProcessLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\MarqueeConsole.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

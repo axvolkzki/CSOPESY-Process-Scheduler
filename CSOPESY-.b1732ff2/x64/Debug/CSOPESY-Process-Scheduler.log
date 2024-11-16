@@ -1,2 +1,6 @@
-﻿  MainConsole.cpp
+﻿  ConsoleManager.cpp
+  MarqueeConsole.cpp
+C:\Users\Acer\OneDrive\Desktop\GitHub\CSOPESY\CSOPESY-Process-Scheduler\Console\MarqueeConsole.cpp(82,78): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Acer\OneDrive\Desktop\GitHub\CSOPESY\CSOPESY-Process-Scheduler\Console\MarqueeConsole.cpp(89,78): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
   CSOPESY-Process-Scheduler.vcxproj -> C:\Users\Acer\OneDrive\Desktop\GitHub\CSOPESY\CSOPESY-Process-Scheduler\x64\Debug\CSOPESY-Process-Scheduler.exe
