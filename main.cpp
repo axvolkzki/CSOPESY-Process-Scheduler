@@ -1,6 +1,7 @@
-#include <Windows.h>
-
+#include "Config/GlobalConfig.h"
 #include "Console/ConsoleManager.h"
+
+#include <Windows.h>
 
 // Function Prototype
 void SetConsoleWindow(int width, int height);
@@ -8,6 +9,9 @@ void SetConsoleWindow(int width, int height);
 
 int main()
 {
+	GlobalConfig::initialize();
+	GlobalConfig::getInstance()->loadConfigFile();
+
 	ConsoleManager::initialize();
 
 	bool running = true;
