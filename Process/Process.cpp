@@ -90,3 +90,10 @@ void Process::generateArrivalTime()
 	auto currentTime = std::chrono::system_clock::to_time_t(now);
 	localtime_s(&localArrivalTime, &currentTime); // Store the arrival time
 }
+
+int Process::generateRandomProcess(int totalLines)
+{
+	for (int i = 0; i < totalLines; i++) {
+		this->addCommand(ICommand::CommandType::PRINT);
+	}
+}

@@ -1,9 +1,11 @@
 #pragma once
+#include <memory>
+#include <vector>
+
+
 #include "../TypedefRepo.h"
 #include "../Command/PrintCommand.h"
 
-#include <memory>
-#include <vector>
 
 
 
@@ -36,6 +38,8 @@ public:
     String getFormattedArrivalTime() const;
 
     void generateArrivalTime();
+
+    int generateRandomProcess(int totalLines);
 
 private:
     int pid;
