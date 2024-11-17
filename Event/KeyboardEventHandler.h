@@ -1,9 +1,9 @@
 #pragma once
-#include "../TypeDefRepo.h"
-#include "IKeyboardEvent.h"
-
 #include <iostream>
 #include <Windows.h>
+
+#include "../TypeDefRepo.h"
+#include "IKeyboardEvent.h"
 
 
 class KeyboardEventHandler : public IKeyboardEvent
