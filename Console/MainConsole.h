@@ -40,8 +40,6 @@ private:
 	void executeDummyLayoutCommand() const;
 	void executeMarqueeConsoleCommand() const;
 
-	std::shared_ptr<Process> createProcess(String processName) const;
-
 };
 
 	

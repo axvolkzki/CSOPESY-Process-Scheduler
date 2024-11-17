@@ -260,15 +260,3 @@ void MainConsole::executeMarqueeConsoleCommand() const
 	ConsoleManager::getInstance()->process();
 	ConsoleManager::getInstance()->drawConsole();
 }
-
-std::shared_ptr<Process> MainConsole::createProcess(String processName) const
-{
-	// Create a process
-	std::shared_ptr<Process> process = std::make_shared<Process>(processName, 100);
-
-	// Add the process in the list
-	ConsoleManager::getInstance()->addProcess(process);
-
-	return process;
-	
-}

@@ -1,13 +1,14 @@
 #pragma once
-#include "../TypeDefRepo.h"
-#include "../Console/AConsole.h"
-#include "../Screen/BaseScreen.h"
-
 #include <memory>
 #include <vector>
 #include <unordered_map>
 #include <iostream>
 #include "Windows.h"
+
+#include "../TypeDefRepo.h"
+#include "../Console/AConsole.h"
+#include "../Screen/BaseScreen.h"
+
 
 
 
@@ -19,7 +20,8 @@ const String MEMORY_CONSOLE_NAME = "MEMORY_CONSOLE";
 class ConsoleManager
 {
 public:
-	typedef std::unordered_map<String, std::shared_ptr<AConsole>> ConsoleTable;			// Collection of key value pairs
+	typedef std::unordered_map<String, std::shared_ptr<AConsole>> ConsoleTable;
+	typedef std::unordered_map<int, std::shared_ptr<Process>> ProcessTable;
 
 	static ConsoleManager* getInstance();
 	static void initialize();
@@ -42,8 +44,10 @@ public:
 	void setCursorPosition(int x, int y) const;
 
 	// Add a process to the list
-	void addProcess(std::shared_ptr<Process> processName);
-	std::shared_ptr<Process> getProcess(String processName);
+	void addProcess(std::shared_ptr<Process> process);
+	std::shared_ptr<Process> findProcess(String processName);
+
+	int getProcessTableSize() const;
 
 private:
 	ConsoleManager();
@@ -55,10 +59,9 @@ private:
 	ConsoleTable consoleTable;
 	std::shared_ptr<AConsole> currentConsole;
 	std::shared_ptr<AConsole> previousConsole;
+	ProcessTable processTable;
 	
 	HANDLE consoleHandle;
 	bool running = true;
-
-	std::vector<std::shared_ptr<Process>> processList;
 };
 

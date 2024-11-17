@@ -130,19 +130,29 @@ void ConsoleManager::setCursorPosition(int posX, int posY) const
 	SetConsoleCursorPosition(this->consoleHandle, coord);
 }
 
-void ConsoleManager::addProcess(std::shared_ptr<Process> processName)
+void ConsoleManager::addProcess(std::shared_ptr<Process> process)
 {
-	processList.push_back(processName);
+	int id = processTable.size() + 1;
+
+	this->processTable[id] = process;
 }
 
-std::shared_ptr<Process> ConsoleManager::getProcess(String processName)
+std::shared_ptr<Process> ConsoleManager::findProcess(String processName)
 {
-	for (const auto& process : processList) {
+	// Iterate through the processTable
+	for (const auto& [id, process] : processTable) {
+		// Check if the process name matches
 		if (process->getName() == processName) {
-			return process;
+			return process; // Return the matching process
 		}
 	}
+	// If no process is found, return a null shared_ptr
 	return nullptr;
+}
+
+int ConsoleManager::getProcessTableSize() const
+{
+	return this->processTable.size();
 }
 
 // Constructor
