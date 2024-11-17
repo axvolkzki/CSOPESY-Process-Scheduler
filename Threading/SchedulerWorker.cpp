@@ -1,6 +1,6 @@
 #include "SchedulerWorker.h"
 
-#include "GlobalScheduler.h"
+#include "../Scheduler/GlobalScheduler.h"
 
 void SchedulerWorker::update(bool isRunning)
 {
@@ -9,7 +9,7 @@ void SchedulerWorker::update(bool isRunning)
 
 void SchedulerWorker::run()
 {
-	while (this->isRunning) {
+	/*while (this->isRunning) {
 		GlobalScheduler::getInstance()->tick();
-	}
+	}*/
 }

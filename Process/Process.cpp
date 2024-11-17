@@ -49,7 +49,7 @@ int Process::getCommandCounter() const
 
 int Process::getLinesOfCode() const
 {
-	return this->commandList.size()
+	return this->commandList.size();
 }
 
 int Process::getPID() const
@@ -91,7 +91,7 @@ void Process::generateArrivalTime()
 	localtime_s(&localArrivalTime, &currentTime); // Store the arrival time
 }
 
-int Process::generateRandomProcess(int totalLines)
+void Process::generateRandomProcess(int totalLines)
 {
 	for (int i = 0; i < totalLines; i++) {
 		this->addCommand(ICommand::CommandType::PRINT);

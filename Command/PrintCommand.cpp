@@ -1,6 +1,6 @@
 #include "PrintCommand.h"
 
-PrintCommand::PrintCommand(int pid, String& toPrint) : ICommand(pid, PRINT)
+PrintCommand::PrintCommand(int pid, String& toPrint) : ICommand(pid, ICommand::PRINT)
 {
 	this->toPrint = toPrint;
 }

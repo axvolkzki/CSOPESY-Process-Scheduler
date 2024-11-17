@@ -18,6 +18,12 @@ protected:
 	CommandType commandType;
 };
 
+inline ICommand::ICommand(int pid, CommandType commandType)
+{
+	this->pid;
+	this->commandType = commandType;
+}
+
 inline ICommand::CommandType ICommand::getCommandType()
 {
 	return this->commandType;

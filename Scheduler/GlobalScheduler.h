@@ -28,9 +28,8 @@ private:
 	static GlobalScheduler* sharedInstance;
 
 	int pidCounter;
-	std::shared_ptr<AScheduler> scheduler;
+	//std::shared_ptr<AScheduler> scheduler;
 
-	std::shared_ptr<Process> findProcess(String processName);
 	String generateUniqueProcessName(int id);
 };
 

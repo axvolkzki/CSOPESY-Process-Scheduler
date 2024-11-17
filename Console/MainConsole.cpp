@@ -1,5 +1,6 @@
 #include "MainConsole.h"
 #include "../Layout/DummyProcessLayout.h"
+#include "../Scheduler/GlobalScheduler.h"
 
 
 
@@ -33,6 +34,8 @@ void MainConsole::process()
 				this->isInitialized = true;
 				std::cout << "Initialization successful." << std::endl;
 
+				GlobalConfig::getInstance()->printConfig();
+
 				std::cout << std::endl;
 				continue;	// Skip the rest of the loop
 			}
@@ -52,6 +55,11 @@ void MainConsole::process()
 			if (isValidCommand) {
 				if (commandMain == "initialize") {
 					std::cout << "The program is already initialized!" << std::endl;
+
+					GlobalConfig::getInstance()->printConfig();
+
+					std::cout << std::endl;
+					continue;
 				}
 				else if (commandMain == "clear") {
 					system("cls");
@@ -76,7 +84,7 @@ void MainConsole::process()
 							this->executeScreenRedrawCommand(commandMain);
 						}
 						else if (commandMain.substr(0, 9) == "screen -l") {
-							//this->executeScreenListCommand();
+							
 						}
 					}
 					else {
@@ -207,9 +215,12 @@ bool MainConsole::validateScreenCommand(String command) const
 void MainConsole::executeScreenSwitchCommand(String command) const
 {
 	String screenName = command.substr(10, command.length());
+	int totalLines = GlobalConfig::getInstance()->getRandomInstructionCount();
 
-	std::shared_ptr<Process> newProcess = this->createProcess(screenName);
+	std::shared_ptr<Process> newProcess = GlobalScheduler::getInstance()->createUniqueProcess(screenName, totalLines);
 	std::shared_ptr<BaseScreen> newScreen = std::make_shared<BaseScreen>(newProcess, screenName);
+
+	ConsoleManager::getInstance()->addProcess(newProcess);
 
 	ConsoleManager::getInstance()->registerScreen(newScreen);
 	ConsoleManager::getInstance()->switchToScreen(screenName);
@@ -222,7 +233,7 @@ void MainConsole::executeScreenRedrawCommand(String command) const
 	String screenName = command.substr(10, command.length());
 
 	// get the process first
-	std::shared_ptr<Process> currentProcess = ConsoleManager::getInstance()->getProcess(screenName);
+	std::shared_ptr<Process> currentProcess = ConsoleManager::getInstance()->findProcess(screenName);
 	std::shared_ptr<BaseScreen> currentScreen = std::make_shared<BaseScreen>(currentProcess, screenName);
 	ConsoleManager::getInstance()->registerScreen(currentScreen);
 	ConsoleManager::getInstance()->switchToScreen(screenName);

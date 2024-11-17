@@ -39,7 +39,7 @@ public:
 
     void generateArrivalTime();
 
-    int generateRandomProcess(int totalLines);
+    void generateRandomProcess(int totalLines);
 
 private:
     int pid;
