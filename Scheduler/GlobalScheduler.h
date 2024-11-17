@@ -5,19 +5,19 @@
 
 #include "../TypeDefRepo.h"
 #include "../Process/Process.h"
+#include "../Console/ConsoleManager.h"
+#include "AScheduler.h"
 
 class GlobalScheduler
 {
 public:
-	typedef std::map<int, String> ProcessTable;
-
 	static GlobalScheduler* getInstance();
 	static void initialize();
 	static void destroy();
 	
 	void tick() const;
 
-	std::shared_ptr<Process> createUniqueProcess(String name);
+	std::shared_ptr<Process> createUniqueProcess(String name, int totalLines);
 	std::shared_ptr<Process> findProcess(String name) const;
 
 private:
@@ -27,7 +27,10 @@ private:
 	GlobalScheduler& operator=(GlobalScheduler const&) {};
 	static GlobalScheduler* sharedInstance;
 
-	ProcessTable processTable;
+	int pidCounter;
 	std::shared_ptr<AScheduler> scheduler;
+
+	std::shared_ptr<Process> findProcess(String processName);
+	String generateUniqueProcessName(int id);
 };
 
