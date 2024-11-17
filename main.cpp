@@ -1,7 +1,11 @@
+#include <Windows.h>
+
 #include "Config/GlobalConfig.h"
+#include "Scheduler/GlobalScheduler.h"
 #include "Console/ConsoleManager.h"
 
-#include <Windows.h>
+
+
 
 // Function Prototype
 void SetConsoleWindow(int width, int height);
@@ -10,8 +14,10 @@ void SetConsoleWindow(int width, int height);
 int main()
 {
 	GlobalConfig::initialize();
-	GlobalConfig::getInstance()->loadConfigFile();
+	String filename = "config.txt";
+	GlobalConfig::getInstance()->loadConfigFile(filename);
 
+	GlobalScheduler::initialize();
 	ConsoleManager::initialize();
 
 	bool running = true;
