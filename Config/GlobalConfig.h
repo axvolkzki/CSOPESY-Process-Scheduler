@@ -1,12 +1,14 @@
 #pragma once
-#include "../TypedefRepo.h"
-
 #include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <iomanip> // For quoted string parsing
 #include <random>
+
+#include "../TypedefRepo.h"
+
+
 
 class GlobalConfig
 {
