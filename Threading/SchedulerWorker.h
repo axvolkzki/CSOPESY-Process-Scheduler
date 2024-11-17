@@ -4,7 +4,7 @@
 class SchedulerWorker : public IETThread
 {
 public:
-	ScchedulerWorker() = default;
+	SchedulerWorker() = default;
 	void update(bool isRunning);
 	void run() override;
 

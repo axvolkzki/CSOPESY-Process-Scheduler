@@ -1,9 +1,11 @@
 #pragma once
+#include <memory>
+#include <vector>
+
 #include "../Config/GlobalConfig.h"
 #include "../Threading/SchedulerWorker.h"
 
-#include <vector>
-#include <memory>
+
 
 class ResourceEmulator
 {
