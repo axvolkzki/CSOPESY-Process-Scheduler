@@ -17,8 +17,11 @@ public:
 	
 	void tick() const;
 
-	std::shared_ptr<Process> createUniqueProcess(String name, int totalLines);
+	std::shared_ptr<Process> createUniqueProcess(String name);
 	std::shared_ptr<Process> findProcess(String name) const;
+
+	std::shared_ptr<AScheduler> getScheduler();
+
 
 private:
 	GlobalScheduler();
@@ -28,8 +31,10 @@ private:
 	static GlobalScheduler* sharedInstance;
 
 	int pidCounter;
-	//std::shared_ptr<AScheduler> scheduler;
+	std::shared_ptr<AScheduler> scheduler;
 
 	String generateUniqueProcessName(int id);
+
+	void initializeScheduler(const String& schedulerType);
 };
 

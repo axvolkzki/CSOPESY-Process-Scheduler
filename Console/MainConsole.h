@@ -2,6 +2,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <algorithm>
+#include <conio.h>
 
 
 
@@ -21,6 +22,7 @@ public:
 private:
 	bool isInitialized = false;
 	bool isRunning = true;
+	bool isStopSchedulerTest = false;
 
 	void ASCIITextHeader() const;
 	void displayDevelopers() const;
@@ -32,9 +34,9 @@ private:
 
 	void executeScreenSwitchCommand(String command) const;
 	void executeScreenRedrawCommand(String command) const;
-	void executeScreenListCommand() const;
-	void executeSchedulerTestCommand() const;
-	void executeSchedulerStopCommand() const;
+	void executeScreenListCommand();
+	void executeSchedulerTestCommand();
+	void executeSchedulerStopCommand();
 	void executeReportUtilizationCommand() const;
 
 	void executeDummyLayoutCommand() const;

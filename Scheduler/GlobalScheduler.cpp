@@ -1,9 +1,9 @@
 #include "GlobalScheduler.h"
+#include "FCFSScheduler.h"
 
 
-// Define the static instance pointer
+
 GlobalScheduler* GlobalScheduler::sharedInstance = nullptr;
-
 GlobalScheduler* GlobalScheduler::getInstance()
 {
 	return sharedInstance;
@@ -19,15 +19,18 @@ void GlobalScheduler::destroy()
 	delete sharedInstance;
 }
 
-//void GlobalScheduler::tick() const
-//{
-//	this->scheduler->execute();
-//}
-
-std::shared_ptr<Process> GlobalScheduler::createUniqueProcess(String name, int totalLines)
+void GlobalScheduler::tick() const
 {
+	this->scheduler->execute();
+}
+
+std::shared_ptr<Process> GlobalScheduler::createUniqueProcess(String name)
+{
+	int totalLines = GlobalConfig::getInstance()->getRandomInstructionCount();
 	this->pidCounter = ConsoleManager::getInstance()->getProcessTableSize();
 	this->pidCounter++;
+
+	name = this->generateUniqueProcessName(this->pidCounter);
 
 	/*std::shared_ptr<Process> existingProcess = this->findProcess(name);
 
@@ -45,15 +48,30 @@ std::shared_ptr<Process> GlobalScheduler::createUniqueProcess(String name, int t
 
 	// put new process to ready queue
 	//this->scheduler->addProcess(newProcess);
+
+	// add process to process table
+	ConsoleManager::getInstance()->addProcess(newProcess);
 	
 
 	return newProcess;
 }
 
-//std::shared_ptr<Process> GlobalScheduler::findProcess(String name) const
-//{
-//	return this->scheduler->findProcess(name);
-//}
+std::shared_ptr<Process> GlobalScheduler::findProcess(String name) const
+{
+	return this->scheduler->findProcess(name);
+}
+
+std::shared_ptr<AScheduler> GlobalScheduler::getScheduler()
+{
+	return this->scheduler;
+}
+
+void GlobalScheduler::initializeScheduler(const String& schedulerType)
+{
+	if (schedulerType == "fcfs") {
+		scheduler = std::make_shared<FCFSScheduler>(0, "Global_FCFS");
+	}
+}
 
 String GlobalScheduler::generateUniqueProcessName(int id)
 {
@@ -63,6 +81,8 @@ String GlobalScheduler::generateUniqueProcessName(int id)
 }
 
 GlobalScheduler::GlobalScheduler() {
-	pidCounter = 0;
-	//scheduler = std::make_shared<AScheduler>();
+	this->pidCounter = 0;
+	//this->scheduler = nullptr;	// Initialize the scheduler to null
+	String schedulerType = GlobalConfig::getInstance()->getScheduler();
+	this->initializeScheduler(schedulerType);
 }

@@ -3,6 +3,7 @@
 #include "Config/GlobalConfig.h"
 #include "Scheduler/GlobalScheduler.h"
 #include "Console/ConsoleManager.h"
+#include "Scheduler/ResourceEmulator.h"
 
 
 
@@ -19,6 +20,9 @@ int main()
 
 	GlobalScheduler::initialize();
 	ConsoleManager::initialize();
+	//ResourceEmulator::initialize();
+
+	//ResourceEmulator::getInstance()->startAllCPUs();
 
 	bool running = true;
 	while (running) {
@@ -28,7 +32,9 @@ int main()
 		running = ConsoleManager::getInstance()->isRunning();
 	}
 
+	GlobalConfig::destroy();
 	ConsoleManager::destroy();
+	//ResourceEmulator::destroy();
 
 	return 0;
 }

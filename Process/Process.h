@@ -21,6 +21,8 @@ public:
 
     Process(int pid, String name);
 
+    void manualAddCommand(String command);
+
     void addCommand(ICommand::CommandType commandType);
     void executeCurrentCommand() const;
     void moveToNextLine();

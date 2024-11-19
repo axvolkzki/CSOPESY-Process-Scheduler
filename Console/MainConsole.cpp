@@ -47,10 +47,10 @@ void MainConsole::process()
 		}
 
 		
-		isValidCommand = this->validateCommand(commandMain);
+		
 		// Check if the program is initialized before proceeding
-		if (this->isInitialized && isValidCommand) {
-			
+		if (this->isInitialized) {
+			isValidCommand = this->validateCommand(commandMain);
 
 			if (isValidCommand) {
 				if (commandMain == "initialize") {
@@ -79,17 +79,28 @@ void MainConsole::process()
 							isRunning = false;
 							this->executeScreenSwitchCommand(commandMain);
 						}
-						else if (commandMain.substr(0, 9) == "screen -r") {
+						
+						if (commandMain.substr(0, 9) == "screen -r") {
 							isRunning = false;
 							this->executeScreenRedrawCommand(commandMain);
 						}
-						else if (commandMain.substr(0, 9) == "screen -l") {
-							
+						
+						if (commandMain.substr(0, 10) == "screen -ls") {
+							this->executeScreenListCommand();
 						}
 					}
 					else {
 						std::cerr << "Error: Invalid screen command.\n";
 					}
+				}
+				else if (commandMain == "scheduler-test") {
+					this->executeSchedulerTestCommand();
+				}
+				else if (commandMain == "scheduler-stop") {
+					//this->executeSchedulerStopCommand();
+				}
+				else if (commandMain == "report-util") {
+					//this->executeReportUtilizationCommand();
 				}
 				else if (commandMain == "dummy-layout") {
 					this->executeDummyLayoutCommand();
@@ -100,6 +111,9 @@ void MainConsole::process()
 				else {
 					this->commandRecognized(commandMain);
 				}
+			}
+			else {
+				std::cerr << "Error: Invalid command. Please enter a valid command.\n" << std::endl;
 			}
 		}
 		else {
@@ -191,6 +205,7 @@ bool MainConsole::validateScreenCommand(String command) const
 	bool isValid = false;
 
 	String subString = command.substr(0, 9);
+	String subStringList = command.substr(0, 10);
 
 	if (subString == "screen -s" && command.length() > 9) {
 		isValid = true;
@@ -198,7 +213,8 @@ bool MainConsole::validateScreenCommand(String command) const
 	else if (subString == "screen -r" && command.length() > 9) {
 		isValid = true;
 	}
-	else if (subString == "screen -l" && command.length() == 9) {
+	
+	if (subStringList == "screen -ls" && command.length() == 10) {
 		isValid = true;
 	}
 
@@ -214,18 +230,26 @@ bool MainConsole::validateScreenCommand(String command) const
 
 void MainConsole::executeScreenSwitchCommand(String command) const
 {
-	String screenName = command.substr(10, command.length());
-	int totalLines = GlobalConfig::getInstance()->getRandomInstructionCount();
+	String processName = command.substr(10, command.length());
 
-	std::shared_ptr<Process> newProcess = GlobalScheduler::getInstance()->createUniqueProcess(screenName, totalLines);
-	std::shared_ptr<BaseScreen> newScreen = std::make_shared<BaseScreen>(newProcess, screenName);
+	// Check if the process already exists
+	if (ConsoleManager::getInstance()->findExistingProcess(processName)) {
+		std::cerr << "Error: Process " << processName << " already exists.\n";
+		return;
+	}
+	else {
+		int newPID = ConsoleManager::getInstance()->getProcessTableSize() + 1;
 
-	ConsoleManager::getInstance()->addProcess(newProcess);
+		std::shared_ptr<Process> newProcess = std::make_shared<Process>(newPID, processName);
+		std::shared_ptr<BaseScreen> newScreen = std::make_shared<BaseScreen>(newProcess, processName);
 
-	ConsoleManager::getInstance()->registerScreen(newScreen);
-	ConsoleManager::getInstance()->switchToScreen(screenName);
-	ConsoleManager::getInstance()->process();
-	ConsoleManager::getInstance()->drawConsole();
+		ConsoleManager::getInstance()->addProcess(newProcess);
+
+		ConsoleManager::getInstance()->registerScreen(newScreen);
+		ConsoleManager::getInstance()->switchToScreen(processName);
+		ConsoleManager::getInstance()->process();
+		ConsoleManager::getInstance()->drawConsole();
+	}
 }
 
 void MainConsole::executeScreenRedrawCommand(String command) const
@@ -239,6 +263,58 @@ void MainConsole::executeScreenRedrawCommand(String command) const
 	ConsoleManager::getInstance()->switchToScreen(screenName);
 	ConsoleManager::getInstance()->process();
 	ConsoleManager::getInstance()->drawConsole();
+}
+
+void MainConsole::executeScreenListCommand()
+{
+	std::cout << "Listing all processes...\n" << std::endl;
+
+	// Get the process table
+	ConsoleManager::ProcessTable processTable = ConsoleManager::getInstance()->getProcessTable();
+
+	// Iterate through the process table
+	std::cout << "Process Name\t\tArrival Time\t\tCurrent Instruction\t\tTotal Instructions\n";
+
+	for (const auto& [id, process] : processTable) {
+		std::tm arrivalTime = process->getArrivalTime();
+		std::cout << process->getName() << "\t\t" << std::put_time(&arrivalTime, "%Y-%m-%d %H:%M:%S") << "\t\t" << process->getRemainingTime() << "\t\t" << process->getLinesOfCode() << std::endl;
+	}
+
+}
+
+void MainConsole::executeSchedulerTestCommand()
+{
+	std::cout << "Running scheduler test...\n" << std::endl;
+
+	int batchProcessFreq = GlobalConfig::getInstance()->getBatchProcessFreq();
+	int cpuCycleCounter = 0;
+
+	std::cout << "Enter command: ";
+
+	while (this->isStopSchedulerTest == false) {
+		if (_kbhit()) {
+			std::string input;
+			std::getline(std::cin, input);
+			if (input == "scheduler-stop") {
+				std::cout << "Stopping the scheduler...\n" << std::endl;
+				this->isStopSchedulerTest = true;
+				break;
+			}
+		}
+
+		if (cpuCycleCounter % batchProcessFreq == 0) {
+			GlobalScheduler::getInstance()->createUniqueProcess("");
+		}
+		cpuCycleCounter++;
+	}
+
+	GlobalScheduler::getInstance()->createUniqueProcess("");
+}
+
+void MainConsole::executeSchedulerStopCommand()
+{
+	std::cout << "\nStopping the scheduler...\n" << std::endl;
+	this->isStopSchedulerTest = false;
 }
 
 void MainConsole::executeDummyLayoutCommand() const

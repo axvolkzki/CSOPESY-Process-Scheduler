@@ -13,6 +13,13 @@ Process::Process(int pid, String name)
 	this->currentState = ProcessState::READY;
 }
 
+void Process::manualAddCommand(String command)
+{
+	String toPrint = command;
+	const std::shared_ptr<ICommand> print = std::make_shared<PrintCommand>(this->pid, toPrint);
+	this->commandList.push_back(print);
+}
+
 void Process::addCommand(ICommand::CommandType commandType)
 {
 	if (commandType == ICommand::PRINT) {
@@ -29,7 +36,7 @@ void Process::executeCurrentCommand() const
 
 void Process::moveToNextLine()
 {
-	this->commandCounter++;
+	this->commandCounter + 1;
 }
 
 bool Process::isFinished() const

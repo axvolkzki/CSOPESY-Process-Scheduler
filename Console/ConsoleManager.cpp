@@ -155,6 +155,29 @@ int ConsoleManager::getProcessTableSize() const
 	return this->processTable.size();
 }
 
+bool ConsoleManager::findExistingProcess(String name)
+{
+	bool isExist = false;
+
+	// Iterate through the processTable
+	for (const auto& [id, process] : processTable) {
+		// Check if the process name matches
+		if (process->getName() == name) {
+			isExist = true;
+			break;
+		}
+	}
+
+	return isExist;
+}
+
+ConsoleManager::ProcessTable ConsoleManager::getProcessTable() const
+{
+	return this->processTable;
+}
+
+
+
 // Constructor
 ConsoleManager::ConsoleManager()
 {

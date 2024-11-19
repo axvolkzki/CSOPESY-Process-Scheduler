@@ -48,6 +48,9 @@ public:
 	std::shared_ptr<Process> findProcess(String processName);
 
 	int getProcessTableSize() const;
+	bool findExistingProcess(String name);
+
+	ProcessTable getProcessTable() const;
 
 private:
 	ConsoleManager();
