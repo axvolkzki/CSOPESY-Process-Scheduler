@@ -10,6 +10,8 @@
 #include "../TypeDefRepo.h"
 #include "ConsoleManager.h"
 #include "../Process/Process.h"
+#include "../Layout/DummyProcessLayout.h"
+#include "../Scheduler/Scheduler.h"
 
 class MainConsole : public AConsole
 {
@@ -22,7 +24,8 @@ public:
 private:
 	bool isInitialized = false;
 	bool isRunning = true;
-	bool isStopSchedulerTest = false;
+	//bool isStopSchedulerTest = false;
+	std::atomic<bool> isStopSchedulerTest = false;
 
 	void ASCIITextHeader() const;
 	void displayDevelopers() const;

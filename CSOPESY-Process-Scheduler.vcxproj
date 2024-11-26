@@ -128,23 +128,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scheduler\CPUCore.cpp" />
+    <ClCompile Include="Scheduler\Scheduler.cpp" />
     <ClCompile Include="Console\MainConsole.cpp" />
+    <ClCompile Include="Config\GlobalConfig.cpp" />
+    <ClCompile Include="Command\PrintCommand.cpp" />
+    <ClCompile Include="Log\MessageBuffer.cpp" />
+    <ClCompile Include="Process\Process.cpp" />
     <ClCompile Include="Layout\DummyProcessLayout.cpp" />
     <ClCompile Include="Event\KeyboardEventHandler.cpp" />
     <ClCompile Include="Console\MarqueeConsole.cpp" />
-    <ClCompile Include="Process\Process.cpp" />
     <ClCompile Include="Screen\BaseScreen.cpp" />
     <ClCompile Include="Console\ConsoleManager.cpp" />
     <ClCompile Include="Console\AConsole.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scheduler\CPUCore.h" />
+    <ClInclude Include="Scheduler\Scheduler.h" />
     <ClInclude Include="Console\MainConsole.h" />
+    <ClInclude Include="Config\GlobalConfig.h" />
+    <ClInclude Include="Command\PrintCommand.h" />
+    <ClInclude Include="Command\ICommand.h" />
+    <ClInclude Include="Log\MessageBuffer.h" />
+    <ClInclude Include="Process\Process.h" />
     <ClInclude Include="Layout\DummyProcessLayout.h" />
     <ClInclude Include="Event\IKeyboardEvent.h" />
     <ClInclude Include="Event\KeyboardEventHandler.h" />
     <ClInclude Include="Console\MarqueeConsole.h" />
-    <ClInclude Include="Process\Process.h" />
     <ClInclude Include="Screen\BaseScreen.h" />
     <ClInclude Include="Console\ConsoleManager.h" />
     <ClInclude Include="Console\AConsole.h" />
@@ -153,6 +164,9 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="config.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
