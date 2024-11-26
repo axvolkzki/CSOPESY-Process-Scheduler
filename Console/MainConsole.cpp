@@ -1,6 +1,5 @@
 #include "MainConsole.h"
-#include "../Layout/DummyProcessLayout.h"
-#include "../Scheduler/GlobalScheduler.h"
+
 
 
 
@@ -97,10 +96,10 @@ void MainConsole::process()
 					this->executeSchedulerTestCommand();
 				}
 				else if (commandMain == "scheduler-stop") {
-					//this->executeSchedulerStopCommand();
+					this->executeSchedulerStopCommand();
 				}
 				else if (commandMain == "report-util") {
-					//this->executeReportUtilizationCommand();
+					this->executeReportUtilizationCommand();
 				}
 				else if (commandMain == "dummy-layout") {
 					this->executeDummyLayoutCommand();
@@ -267,54 +266,61 @@ void MainConsole::executeScreenRedrawCommand(String command) const
 
 void MainConsole::executeScreenListCommand()
 {
-	std::cout << "Listing all processes...\n" << std::endl;
+	std::cout << "Screen List: \n" << std::endl;
 
-	// Get the process table
-	ConsoleManager::ProcessTable processTable = ConsoleManager::getInstance()->getProcessTable();
+	Scheduler::getInstance()->displaySchedulerStatus();
 
-	// Iterate through the process table
-	std::cout << "Process Name\t\tArrival Time\t\tCurrent Instruction\t\tTotal Instructions\n";
-
-	for (const auto& [id, process] : processTable) {
-		std::tm arrivalTime = process->getArrivalTime();
-		std::cout << process->getName() << "\t\t" << std::put_time(&arrivalTime, "%Y-%m-%d %H:%M:%S") << "\t\t" << process->getRemainingTime() << "\t\t" << process->getLinesOfCode() << std::endl;
-	}
-
+	std::cout << std::endl;
 }
 
 void MainConsole::executeSchedulerTestCommand()
 {
-	std::cout << "Running scheduler test...\n" << std::endl;
+	std::cout << "Running scheduler test: Start adding processes...\n" << std::endl;
 
 	int batchProcessFreq = GlobalConfig::getInstance()->getBatchProcessFreq();
 	int cpuCycleCounter = 0;
 
-	std::cout << "Enter command: ";
+	std::thread schedulerTestThread([this]() {
+		int batchProcessFreq = GlobalConfig::getInstance()->getBatchProcessFreq();
+		int cpuCycleCounter = 0;
 
-	while (this->isStopSchedulerTest == false) {
-		if (_kbhit()) {
-			std::string input;
-			std::getline(std::cin, input);
-			if (input == "scheduler-stop") {
-				std::cout << "Stopping the scheduler...\n" << std::endl;
-				this->isStopSchedulerTest = true;
-				break;
+		while (!this->isStopSchedulerTest) {
+			if (cpuCycleCounter % batchProcessFreq == 0) {
+				std::shared_ptr<Process> newProcess = Scheduler::getInstance()->createUniqueProcess();
+
+				String processName = newProcess->getName();
+				if (ConsoleManager::getInstance()->findExistingProcess(processName)) {
+					std::cerr << "Error: Process " << processName << " already exists.\n";
+					continue;
+				}
+				else {
+					ConsoleManager::getInstance()->addProcess(newProcess);
+				}
 			}
-		}
+			cpuCycleCounter++;
 
-		if (cpuCycleCounter % batchProcessFreq == 0) {
-			GlobalScheduler::getInstance()->createUniqueProcess("");
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
-		cpuCycleCounter++;
-	}
+		});
 
-	GlobalScheduler::getInstance()->createUniqueProcess("");
+	schedulerTestThread.detach();
 }
 
 void MainConsole::executeSchedulerStopCommand()
 {
-	std::cout << "\nStopping the scheduler...\n" << std::endl;
-	this->isStopSchedulerTest = false;
+	std::cout << "\nStopping the scheduler test: Stop adding processes...\n" << std::endl;
+	this->isStopSchedulerTest = true;
+	Scheduler::getInstance()->stopScheduler();
+}
+
+void MainConsole::executeReportUtilizationCommand() const
+{
+	std::ofstream out("csopesy-log.txt");
+	std::streambuf* coutbuf = std::cout.rdbuf(); //save old buf
+	std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
+	Scheduler::getInstance()->displaySchedulerStatus();
+	std::cout.rdbuf(coutbuf); //reset to standard output again
+	std::cout << "Report generated at csopesy-log.txt\n" << std::endl;
 }
 
 void MainConsole::executeDummyLayoutCommand() const

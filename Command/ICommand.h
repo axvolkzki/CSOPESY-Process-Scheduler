@@ -1,6 +1,5 @@
 #pragma once
 #include "../Config/GlobalConfig.h"
-#include "../Threading/IETThread.h"
 
 class ICommand
 {
@@ -20,7 +19,7 @@ protected:
 
 inline ICommand::ICommand(int pid, CommandType commandType)
 {
-	this->pid;
+	this->pid = pid;
 	this->commandType = commandType;
 }
 

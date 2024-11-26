@@ -36,7 +36,7 @@ void Process::executeCurrentCommand() const
 
 void Process::moveToNextLine()
 {
-	this->commandCounter + 1;
+	this->commandCounter += 1;
 }
 
 bool Process::isFinished() const

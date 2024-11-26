@@ -1,13 +1,10 @@
 #pragma once
 #include <memory>
 #include <vector>
-
+#include <chrono>
 
 #include "../TypedefRepo.h"
 #include "../Command/PrintCommand.h"
-
-
-
 
 class Process
 {
@@ -54,7 +51,7 @@ private:
     int cpuCoreID = -1;
     ProcessState currentState;
 
-    friend class ResourceEmulator;
+	friend class CPUCore;
 };
 
 

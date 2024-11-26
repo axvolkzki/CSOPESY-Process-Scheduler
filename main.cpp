@@ -1,9 +1,8 @@
 #include <Windows.h>
 
 #include "Config/GlobalConfig.h"
-#include "Scheduler/GlobalScheduler.h"
+#include "Scheduler/Scheduler.h"
 #include "Console/ConsoleManager.h"
-#include "Scheduler/ResourceEmulator.h"
 
 
 
@@ -18,11 +17,8 @@ int main()
 	String filename = "config.txt";
 	GlobalConfig::getInstance()->loadConfigFile(filename);
 
-	GlobalScheduler::initialize();
+	Scheduler::initialize();
 	ConsoleManager::initialize();
-	//ResourceEmulator::initialize();
-
-	//ResourceEmulator::getInstance()->startAllCPUs();
 
 	bool running = true;
 	while (running) {
@@ -34,7 +30,7 @@ int main()
 
 	GlobalConfig::destroy();
 	ConsoleManager::destroy();
-	//ResourceEmulator::destroy();
+	Scheduler::destroy();
 
 	return 0;
 }
